@@ -77,56 +77,45 @@ db.Users.aggregate([{$group : {_id: null , max_age: {$max: "$age"}}}]).pretty()
 
 17. Find the document with minimum age.
 
-db.Users.aggregate([{ $group: { _id: null, min_age: { $min: '$age' } } }]);
+db.Users.aggregate([{$group : {_id: null, min_age : {$min: "$age"}}}]).pretty()
 
 18. Find the sum of ages of all males and females.
 
-db.Users.aggregate([{ $group: { _id: '$gender', total_Age: { $sum: '$age' } } }]);
+db.Users.aggregate([{$group : {_id: "$gender", total_Age : {$sum: "$age"}}}]).pretty()
 
 19. Group all males by their eyeColor.
-    db.Users.aggregate([
-    { $match: { gender: 'male' } },
-    { $group: { _id: '$eyeColor', count: { $sum: 1 } } },
-    ]);
+
+db.Users.aggreget([{$match : {gender : "male"}},{$group : {_id: "$eyeColor", count: {$sum: 1}}}]).pretty()
 
 20. group all 30+ females by their age.
 
-db.Users.aggregate([
-{ $match: { gender: 'female', age: { $gt: 30 } } },
-{ $group: { _id: '$age', count: { $sum: 1 } } },
-]);
+db.Users.aggregate([{$match : {gender: "female", age: {$gt: 30}}}, {$group : {_id: "$age", count: {$sum: 1}}}]).pretty()
 
 21. Group all 23+ males with blue eyes working in Germany.
 
-    db.Users.aggregate([
-    { $match: { gender: 'male', age: { $gt: 23 }, 'company.location.country': 'Germany' } },
-    { $group: { _id: '$age', count: { $sum: 1 } } },
-    ]);
+db.users.aggregate([
+{ $match: { gender: 'male', age: { $gt: 23 }, 'company.location.country': 'Germany' } },
+{ $group: { _id: '$age', count: { $sum: 1 } } },
+]);
 
 22. Group all by tag names i.e. use \$unwind since tags are array.
 
-db.Users.aggregate([
-{ $unwind: '$tags' },
-{ $group: { _id: '$tags', count: { $sum: 1} } }
-]);
+db.Users.aggregate([{$unwind : "$tags"}, {$group : {_id : "$tags", count: {$sum: 1}}}]).pretty()
 
 23. Group all males whose favoriteFruit is `banana` who have registered before 2015.
 
-db.Users.aggregate([
+db.users.aggregate([
 { $match: { gender: 'male', favoriteFruit: 'banana', registered: { $lte: ISODate("2015-07-05T12:16:05Z")} } },
 { $group: { _id: null, count: { $sum: 1 } } },
 ]);
 
 24. Group all females by their favoriteFruit.
 
-db.Users.aggregate([
-{ $match: { gender: 'female' } },
-{ $group: { _id:'$favoriteFruit', count: { $sum: 1 } } },
-]);
+db.Users.aggregate([{ $match: { gender : "female" } }, { $group : {_id: "$favoriteFruit", count: { $sum: 1 }}}]).pretty()
 
 25. Scan all the document to retrieve all eyeColors(use db.COLLECTION_NAME.distinct);
 
-db.Users.distinct('eyeColor');
+db.Users.distinct("eyeColor")
 
 26. Find all apple loving blue eyed female working in 'USA'. Sort them by their registration date in descending order.
 
